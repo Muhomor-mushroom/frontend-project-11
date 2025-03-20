@@ -15,3 +15,6 @@ linter-fix:
 
 publish:
 	npm publish
+
+serve:
+	npx webpack serve
