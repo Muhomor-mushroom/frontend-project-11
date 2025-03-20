@@ -1,4 +1,4 @@
-import  './styles.scss';
-import  'bootstrap';
-import '/node_modules/bootstrap/dist/css/bootstrap.css.'
+import './styles.scss';
+import 'bootstrap';
+
 console.log('Hello, World!');
