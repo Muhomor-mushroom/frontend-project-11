@@ -4,7 +4,7 @@ install:
 test-coverage:
 	npm test -- --coverage --coverageProvider=v8
 
-develop:
+deploy:
 	npx webpack serve
 	
 lint:
