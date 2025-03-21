@@ -41,16 +41,15 @@ const config = {
       message: /homepage/,
     },
     /warning from compiler/,
-    (warning) => true,
+    () => true,
   ],
 };
 
-
 export default () => {
-    if (isProduction) {
-      config.mode = 'production';
-    } else {
-      config.mode = 'development';
-    }
-    return config;
-  };
+  if (isProduction) {
+    config.mode = 'production';
+  } else {
+    config.mode = 'development';
+  }
+  return config;
+};
