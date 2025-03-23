@@ -10,7 +10,7 @@ deploy:
 lint:
 	npx eslint .
 
-linter-fix:
+lint-fix:
 	npx eslint --fix .
 
 publish:

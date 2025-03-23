@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx webpack build" ,
+    "build": "npx webpack build",
     "start": "npx webpack serve"
   },
   "repository": {
@@ -61,6 +61,10 @@
   "dependencies": {
     "@eslint/eslintrc": "^3.3.0",
     "bootstrap": "^5.3.3",
-    "npm-check-updates": "^16.6.2"
+    "lodash": "^4.17.21",
+    "npm-check-updates": "^16.6.2",
+    "on-change": "^5.0.1",
+    "onchange": "^7.1.0",
+    "yup": "^1.0.0-alpha.3"
   }
 }
