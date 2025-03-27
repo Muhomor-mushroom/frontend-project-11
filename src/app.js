@@ -13,7 +13,7 @@ const app = () => {
   /* ----------------------------INITIAL STATE-------------------------- */
   const initialState = {
     validationComplete: false,
-    errors: '',
+    message: '',
   };
   const watchedState = onChange(initialState, view(elements));
   /* ----------------------------EVENT LISTENERS------------------------- */
@@ -22,10 +22,9 @@ const app = () => {
     watchedState.previousUrl = watchedState.activeUrl;
     watchedState.activeUrl = elements.input.value;
     if (watchedState.activeUrl === watchedState.previousUrl) {
-      watchedState.errors = ['RSS уже существует'];
+      watchedState.message = validate('alreadyUsed');
     } else {
-      watchedState.errors = validate({ url: elements.input.value });
-      console.log(watchedState.errors);
+      watchedState.message = validate({ url: elements.input.value });
     }
   });
 };

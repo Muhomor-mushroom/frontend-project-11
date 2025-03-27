@@ -8,6 +8,8 @@ i18next.init({
     ru: {
       translation: {
         URLerror: 'Ссылка должна быть валидным URL',
+        alreadySuccess: 'RSS уже существует',
+        downloaded: 'RSS успешно загружен',
       },
     },
   },
@@ -19,17 +21,21 @@ const schema = yup.object().shape({
 
 /* eslint-disable */
 const validate = (field) => {
-  try {
-    schema.validateSync(field, { abortEarly: false });
-    return {};
-  } catch (e) {
-    switch (e.errors[0]) {
-      case 'url must be a valid URL':
-        return [i18next.t('URLerror')];
-      default:
-        break;
+  if (field === 'alreadyUsed') {
+    return [i18next.t('alreadySuccess')];
+  } else {
+    try {
+      schema.validateSync(field, { abortEarly: false });
+      return [i18next.t('downloaded')];
+    } catch (e) {
+      switch (e.errors[0]) {
+        case 'url must be a valid URL':
+          return [i18next.t('URLerror')];
+        default:
+          break;
+      }
+      /* eslint-enable */
     }
-    /* eslint-enable */
   }
 };
 /* eslint-disable */
