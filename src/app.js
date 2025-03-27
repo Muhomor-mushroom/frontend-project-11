@@ -8,6 +8,7 @@ const app = () => {
     form: document.querySelector('.rss-form'),
     input: document.querySelector('#url-input'),
     confirmButton: document.querySelector('button[type="submit"]'),
+    p: document.querySelector('p.feedback'),
   };
   /* ----------------------------INITIAL STATE-------------------------- */
   const initialState = {
@@ -20,11 +21,11 @@ const app = () => {
     e.preventDefault();
     watchedState.previousUrl = watchedState.activeUrl;
     watchedState.activeUrl = elements.input.value;
-    console.log(`ACTIVE: ${watchedState.activeUrl} AND PREVIOUS: ${watchedState.previousUrl}`);
     if (watchedState.activeUrl === watchedState.previousUrl) {
-      watchedState.errors = { 0: 'Successfully Used!' };
+      watchedState.errors = ['RSS уже существует'];
     } else {
       watchedState.errors = validate({ url: elements.input.value });
+      console.log(watchedState.errors);
     }
   });
 };

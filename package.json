@@ -61,6 +61,7 @@
   "dependencies": {
     "@eslint/eslintrc": "^3.3.0",
     "bootstrap": "^5.3.3",
+    "i18next": "^24.2.3",
     "lodash": "^4.17.21",
     "npm-check-updates": "^16.6.2",
     "on-change": "^5.0.1",
