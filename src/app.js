@@ -38,9 +38,9 @@ const app = () => {
     watchedState.previousUrl = watchedState.activeUrl;
     watchedState.activeUrl = elements.input.value;
     if (watchedState.activeUrl === watchedState.previousUrl) {
-      watchedState.message = validate('alreadyUsed');
+      watchedState.message = validate('alreadyUsed', i18next);
     } else {
-      watchedState.message = validate({ url: elements.input.value });
+      watchedState.message = validate({ url: elements.input.value }, i18next);
     }
   });
   })
