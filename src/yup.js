@@ -1,19 +1,4 @@
 import * as yup from 'yup';
-import i18next from 'i18next';
-
-i18next.init({
-  lng: 'ru',
-  debug: true,
-  resources: {
-    ru: {
-      translation: {
-        URLerror: 'Ссылка должна быть валидным URL',
-        alreadySuccess: 'RSS уже существует',
-        downloaded: 'RSS успешно загружен',
-      },
-    },
-  },
-});
 
 const schema = yup.object().shape({
   url: yup.string().url().nullable(),
