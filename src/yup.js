@@ -1,4 +1,3 @@
-import i18next from 'i18next';
 import * as yup from 'yup';
 
 const schema = yup.object().shape({
@@ -6,17 +5,18 @@ const schema = yup.object().shape({
 });
 
 /* eslint-disable */
-const validate = (field, i18next) => {
+const validate = (field, i18n) => {
   if (field === 'alreadyUsed') {
-    return [i18next.t('alreadySuccess')];
+    return [i18n.t('alreadySuccess')];
   } else {
     try {
       schema.validateSync(field, { abortEarly: false });
-      return [i18next.t('downloaded')];
+      return [i18n.t('downloaded')];
     } catch (e) {
-      switch (e.errors[0].key) {
+      console.log(e.errors[0]);
+      switch (e.errors[0]) {
         case 'url must be a valid URL':
-          return [i18next.t('URLerror')];
+          return [i18n.t('URLerror')];
         default:
           break;
       }
@@ -24,6 +24,6 @@ const validate = (field, i18next) => {
     }
   }
 };
-/* eslint-disable */
+
 
 export default validate;

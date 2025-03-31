@@ -2,23 +2,24 @@ import onChange from 'on-change';
 import validate from './yup.js';
 import view from './view.js';
 import i18next from 'i18next';
-import resources from './resources.js';
+import ru from './ru.js';
 import * as yup from 'yup';
 
 const app = () => {
   /* --------------------------I18 NEXT-------------------------------*/
-  const i18nextInstance = i18next.createInstance();
-  i18nextInstance.init({
+  const i18n = i18next.createInstance();
+  i18n.init({
     lng: 'ru',
-    resources: resources,
+    debug: true,
+    resources: ru,
   })
   .then (() => {
     /* -----------------------------SET LOCALE------------------------- */
-    yup.setLocale({
+     /* yup.setLocale({
       url: {
-        default: () => ({ key: 'URLerror' })
+        default: ({ key: 'URLerror' })
       },
-    });  
+    }); */
     /* ----------------------------SELECTORS--------------------------- */
   const elements = {
     form: document.querySelector('.rss-form'),
@@ -38,9 +39,9 @@ const app = () => {
     watchedState.previousUrl = watchedState.activeUrl;
     watchedState.activeUrl = elements.input.value;
     if (watchedState.activeUrl === watchedState.previousUrl) {
-      watchedState.message = validate('alreadyUsed', i18next);
+      watchedState.message = validate('alreadyUsed', i18n);
     } else {
-      watchedState.message = validate({ url: elements.input.value }, i18next);
+      watchedState.message = validate({ url: elements.input.value }, i18n);
     }
   });
   })
