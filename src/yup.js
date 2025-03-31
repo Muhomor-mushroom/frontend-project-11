@@ -24,5 +24,4 @@ const validate = (field, i18n) => {
   }
 };
 
-
 export default validate;
