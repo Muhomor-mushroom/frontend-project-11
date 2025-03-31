@@ -13,7 +13,6 @@ const validate = (field, i18n) => {
       schema.validateSync(field, { abortEarly: false });
       return [i18n.t('downloaded')];
     } catch (e) {
-      console.log(e.errors[0]);
       switch (e.errors[0]) {
         case 'url must be a valid URL':
           return [i18n.t('URLerror')];
