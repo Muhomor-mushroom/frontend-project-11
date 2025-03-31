@@ -1,5 +1,7 @@
 import _ from 'lodash';
 import onChange from 'on-change';
+import createCard from './createCard.js';
+import clearPostsAndFeeds from './clearPostsAndFeeds.js';
 
 const editContent = (element, text) => {
   /* eslint-disable */
@@ -28,9 +30,14 @@ const watch = (elements, i18n, state) => {
     switch (path) {
       case 'activeUrl':
         break;
+      case 'rssList':
+        clearPostsAndFeeds(elements);
+        createCard(value);
+        break;
       case 'message':
         clearForm(elements);
         if (!_.isEmpty(value)) {
+          console.log(value);
           switch (value) {
             case 'downloaded':
               makeInputGreen(elements);

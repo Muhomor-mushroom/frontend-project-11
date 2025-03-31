@@ -60,6 +60,7 @@
   },
   "dependencies": {
     "@eslint/eslintrc": "^3.3.0",
+    "axios": "^1.8.4",
     "bootstrap": "^5.3.3",
     "i18next": "^24.2.3",
     "lodash": "^4.17.21",

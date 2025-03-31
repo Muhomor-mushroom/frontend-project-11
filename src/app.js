@@ -11,11 +11,14 @@ const app = () => {
     input: document.querySelector('#url-input'),
     confirmButton: document.querySelector('button[type="submit"]'),
     p: document.querySelector('p.feedback'),
+    postsContainer: document.querySelector('.posts'),
+    feedsContainer: document.querySelector('.feeds'),
   };
   /* ----------------------------INITIAL STATE-------------------------- */
   const initialState = {
     validationComplete: false,
     message: '',
+    rssList: [],
   };
   /* -------------------------------MAKE SET LOCALE---------------------------- */
   yup.setLocale({
@@ -44,11 +47,11 @@ const app = () => {
         watchedState.previousUrl = watchedState.activeUrl;
         watchedState.activeUrl = elements.input.value;
         if (watchedState.activeUrl === watchedState.previousUrl) {
-          watchedState.message = validate(schema, 'alreadySuccess');
+          validate(schema, 'alreadySuccess', watchedState);
         } else {
-          watchedState.message = validate(schema, {
+          validate(schema, {
             url: elements.input.value,
-          });
+          }, watchedState);
         }
       });
     });
