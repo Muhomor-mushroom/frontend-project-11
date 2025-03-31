@@ -1,20 +1,17 @@
 /* eslint-disable */
 const validate = (schema, field) => {
-  if (field === 'alreadySuccess') {
+  if (field === "alreadySuccess") {
     return field;
   } else {
     try {
       schema.validateSync(field, { abortEarly: false });
-      return 'downloaded';
+      return "downloaded";
     } catch (e) {
-      switch (e.errors[0]) {
-        case 'url must be a valid URL':
-          return 'URLerror';
-        default:
-          break;
-      }
-      /* eslint-enable */
+      const errors = e.errors;
+      const key = errors[0].key;
+      return key;
     }
+    /* eslint-enable */
   }
 };
 
