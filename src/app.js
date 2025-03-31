@@ -26,17 +26,17 @@ const app = () => {
       resources: ru,
     })
     .then(() => {
-      /* ------------------------------MAKE WATCHED STATE------------------------- */
-      const watchedState = watch(elements, i18n, initialState);
-      /* -------------------------------MAKE SCHEMA AND LOCALE---------------------------- */
-      const schema = yup.object().shape({
-        url: yup.string().url().nullable(),
-      });
-
+      /* -------------------------------MAKE SET LOCALE---------------------------- */
       yup.setLocale({
         url: {
           required: () => ({ key: 'URLerror' }),
         },
+      });
+      /* ------------------------------MAKE WATCHED STATE------------------------- */
+      const watchedState = watch(elements, i18n, initialState);
+      /* ---------------------------------MAKE SCHEMA----------------------------- */
+      const schema = yup.object().shape({
+        url: yup.string().url().nullable(),
       });
       /* ----------------------------EVENT LISTENERS------------------------- */
       elements.form.addEventListener('submit', (e) => {
@@ -46,7 +46,9 @@ const app = () => {
         if (watchedState.activeUrl === watchedState.previousUrl) {
           watchedState.message = validate(schema, 'alreadySuccess');
         } else {
-          watchedState.message = validate(schema, { url: elements.input.value });
+          watchedState.message = validate(schema, {
+            url: elements.input.value,
+          });
         }
       });
     });
