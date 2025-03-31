@@ -17,6 +17,12 @@ const app = () => {
     validationComplete: false,
     message: '',
   };
+  /* -------------------------------MAKE SET LOCALE---------------------------- */
+  yup.setLocale({
+    url: {
+      required: () => ({ key: 'URLerror' }),
+    },
+  });
   /* --------------------------I18 NEXT-------------------------------*/
   const i18n = i18next.createInstance();
   i18n
@@ -26,12 +32,6 @@ const app = () => {
       resources: ru,
     })
     .then(() => {
-      /* -------------------------------MAKE SET LOCALE---------------------------- */
-      yup.setLocale({
-        url: {
-          required: () => ({ key: 'URLerror' }),
-        },
-      });
       /* ------------------------------MAKE WATCHED STATE------------------------- */
       const watchedState = watch(elements, i18n, initialState);
       /* ---------------------------------MAKE SCHEMA----------------------------- */
