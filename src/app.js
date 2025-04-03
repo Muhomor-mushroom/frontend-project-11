@@ -1,58 +1,65 @@
-import i18next from 'i18next';
-import * as yup from 'yup';
-import validate from './validate.js';
-import watch from './view.js';
-import ru from './ru.js';
+import i18next from "i18next";
+import * as yup from "yup";
+import validate from "./validate.js";
+import watch from "./view.js";
+import ru from "./ru.js";
+import axios from 'axios';
+import parseRss from "./rssParser.js";
 
 const app = () => {
   /* ----------------------------SELECTORS--------------------------- */
   const elements = {
-    form: document.querySelector('.rss-form'),
-    input: document.querySelector('#url-input'),
+    form: document.querySelector(".rss-form"),
+    input: document.querySelector("#url-input"),
     confirmButton: document.querySelector('button[type="submit"]'),
-    p: document.querySelector('p.feedback'),
-    postsContainer: document.querySelector('.posts'),
-    feedsContainer: document.querySelector('.feeds'),
+    p: document.querySelector("p.feedback"),
+    postsContainer: document.querySelector(".posts"),
+    feedsContainer: document.querySelector(".feeds"),
   };
   /* ----------------------------INITIAL STATE-------------------------- */
   const initialState = {
     validationComplete: false,
-    message: '',
-    rssList: [],
+    message: "",
+    posts: [],
+    feeds: [],
+    urlsList: [],
   };
   /* -------------------------------MAKE SET LOCALE---------------------------- */
-  yup.setLocale({
+/*    yup.setLocale({
     string: {
-      url: () => ({ key: 'URLerror' }),
+      url: () => ({ key: "URLerror" }),
+      notOneOf: () => ({ key: "URLsListError"}),
     },
-  });
+  }); */
   /* --------------------------I18 NEXT-------------------------------*/
   const i18n = i18next.createInstance();
   i18n
     .init({
-      lng: 'ru',
+      lng: "ru",
       debug: true,
       resources: ru,
     })
     .then(() => {
       /* ------------------------------MAKE WATCHED STATE------------------------- */
       const watchedState = watch(elements, i18n, initialState);
-      /* ---------------------------------MAKE SCHEMA----------------------------- */
-      const schema = yup.object().shape({
-        url: yup.string().url().nullable(),
-      });
       /* ----------------------------EVENT LISTENERS------------------------- */
-      elements.form.addEventListener('submit', (e) => {
+      elements.form.addEventListener("submit", (e) => {
         e.preventDefault();
-        watchedState.previousUrl = watchedState.activeUrl;
-        watchedState.activeUrl = elements.input.value;
-        if (watchedState.activeUrl === watchedState.previousUrl) {
-          validate(schema, 'alreadySuccess', watchedState);
-        } else {
-          validate(schema, {
-            url: elements.input.value,
-          }, watchedState);
-        }
+        validate({ url: elements.input.value }, watchedState.urlsList)
+        .then((result) => {
+          watchedState.urlsList.push(result.url);
+          axios.get(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(`${result.url}`)}`)
+          .then((response) => {
+            parseRss(response, watchedState);
+          })
+        })
+        .catch ((error) => {
+          if (error.errors[0].includes('url must not be one')) {
+            watchedState.message = 'alreadySuccess'
+          } else {
+            watchedState.message = 'URLerror'
+          }
+        })
       });
     });
 };
