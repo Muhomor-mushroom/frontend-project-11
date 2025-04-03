@@ -2,7 +2,7 @@ import i18next from 'i18next';
 import axios from 'axios';
 import validate from './validate.js';
 import watch from './view.js';
-import ru from './ru.js';
+import ru from './resources/ru.js';
 import parseRss from './rssParser.js';
 
 const app = () => {
