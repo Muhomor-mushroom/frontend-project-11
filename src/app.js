@@ -49,7 +49,13 @@ const app = () => {
             watchedState.urlsList.push(result.url);
             axios.get(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(`${result.url}`)}`)
               .then((response) => {
-                parseRss(response, watchedState);
+                const resuletObj = parseRss(response, watchedState);
+                watchedState.feeds = [...watchedState.feeds, ...resuletObj.feeds];
+                watchedState.posts = [watchedState.posts, ...resuletObj.posts];
+              })
+              .catch((error) => {
+                console.error(error);
+                watchedState.message = error.message;
               });
           })
           .catch((error) => {
