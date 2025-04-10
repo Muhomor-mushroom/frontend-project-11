@@ -5,6 +5,31 @@ import watch from './view.js';
 import ru from './resources/ru.js';
 import parseRss from './rssParser.js';
 
+const checkPostsAndFeeds = (state) => {
+  let allPosts = [];
+  let allFeeds = [];
+  state.urlsList.forEach((url) => {
+    axios.get(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(`${url}`)}`)
+      .then((response) => {
+        const parsedUrl = parseRss(response);
+        allPosts = [...allPosts, ...parsedUrl.posts];
+        allFeeds = [...allFeeds, ...parsedUrl.feeds];
+        console.log(allPosts);
+        console.log(allFeeds);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  });
+};
+
+const startChecking = (state) => {
+  let timerChecker = setTimeout(() => {
+    checkPostsAndFeeds(state);
+    timerChecker = setTimeout(timerChecker, 5000);
+  }, 5000);
+};
+
 const app = () => {
   /* ----------------------------SELECTORS--------------------------- */
   const elements = {
@@ -22,6 +47,7 @@ const app = () => {
     posts: [],
     feeds: [],
     urlsList: [],
+    timerIsActive: false,
   };
   /* -------------------------------MAKE SET LOCALE---------------------------- */
   /*    yup.setLocale({
@@ -39,19 +65,23 @@ const app = () => {
       resources: ru,
     })
     .then(() => {
+      let timer;
       /* ------------------------------MAKE WATCHED STATE------------------------- */
       const watchedState = watch(elements, i18n, initialState);
       /* ----------------------------EVENT LISTENERS------------------------- */
       elements.form.addEventListener('submit', (e) => {
         e.preventDefault();
+        clearTimeout(timer);
         validate({ url: elements.input.value }, watchedState.urlsList)
           .then((result) => {
-            watchedState.urlsList.push(result.url);
             axios.get(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(`${result.url}`)}`)
               .then((response) => {
-                const resuletObj = parseRss(response, watchedState);
+                watchedState.urlsList.push(result.url);
+                const resuletObj = parseRss(response);
                 watchedState.feeds = [...watchedState.feeds, ...resuletObj.feeds];
                 watchedState.posts = [watchedState.posts, ...resuletObj.posts];
+                startChecking(watchedState);
+                watchedState.message = 'downloaded';
               })
               .catch((error) => {
                 console.error(error);

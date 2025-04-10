@@ -126,6 +126,7 @@ const makeInputRed = (elements) => {
 const makeInputGreen = (elements) => {
   elements.form.reset();
   elements.p.classList.add('text-success');
+  clearForm(elements);
 };
 
 /* eslint-disable */
@@ -142,29 +143,22 @@ const watch = (elements, i18n, state) => {
         elements.postsContainer.innerHTML = '';
         renderPosts(value);
         break;
+      case 'timerIsActive':
+        console.log('timer');
+        break;
       case 'message':
         clearForm(elements);
         switch (value) {
           case 'notRss':
-            makeInputRed(elements);
-            editContent(elements.p, i18n.t('notRss'));
-            break;
           case 'axiosError':
+          case 'alreadySuccess':
+          case 'URLerror':
             makeInputRed(elements);
-            editContent(elements.p, i18n.t('axiosError'));
+            editContent(elements.p, i18n.t(value));
             break;
           case 'downloaded':
             makeInputGreen(elements);
             editContent(elements.p, i18n.t('downloaded'));
-            elements.form.reset();
-            break;
-          case 'alreadySuccess':
-            makeInputRed(elements);
-            editContent(elements.p, i18n.t('alreadySuccess'));
-            break;
-          case 'URLerror':
-            makeInputRed(elements);
-            editContent(elements.p, i18n.t('URLerror'));
             break;
           default:
             break;
