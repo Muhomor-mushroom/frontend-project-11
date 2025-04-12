@@ -12,15 +12,13 @@ const checkPostsAndFeeds = (state) => {
         const parsedUrl = parseRss(response);
         const oldPosts = state.posts;
         const newPosts = parsedUrl.posts;
-        const oldTitles = oldPosts.map((oldPost) => {
-          return oldPost.title;
-        })
-       newPosts.forEach((newPost) => {
+        const oldTitles = oldPosts.map((oldPost) => oldPost.title);
+        newPosts.forEach((newPost) => {
           if (!oldTitles.includes(newPost.title)) {
             console.log(`url: ${url}, tite: ${newPost.title}`);
-            state.posts.unshift({...newPost, id: state.posts.length + 1});
+            state.posts.unshift({ ...newPost, id: state.posts.length + 1 });
           }
-        })
+        });
         /* const finalCheck = newPosts.filter((newPost) => {
           return oldPosts.some((oldPost) => !oldPost.title === newPost.title);
         }) */
