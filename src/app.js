@@ -6,16 +6,27 @@ import ru from './resources/ru.js';
 import parseRss from './rssParser.js';
 
 const checkPostsAndFeeds = (state) => {
-  let allPosts = [];
-  let allFeeds = [];
   state.urlsList.forEach((url) => {
-    axios.get(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(`${url}`)}`)
+    axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${url}`)}`)
       .then((response) => {
         const parsedUrl = parseRss(response);
-        allPosts = [...allPosts, ...parsedUrl.posts];
-        allFeeds = [...allFeeds, ...parsedUrl.feeds];
-        console.log(allPosts);
-        console.log(allFeeds);
+        const oldPosts = state.posts;
+        const newPosts = parsedUrl.posts;
+        const oldTitles = oldPosts.map((oldPost) => {
+          return oldPost.title;
+        })
+       newPosts.forEach((newPost) => {
+          if (!oldTitles.includes(newPost.title)) {
+            console.log(`url: ${url}, tite: ${newPost.title}`);
+            state.posts.unshift({...newPost, id: state.posts.length + 1});
+          }
+        })
+        /* const finalCheck = newPosts.filter((newPost) => {
+          return oldPosts.some((oldPost) => !oldPost.title === newPost.title);
+        }) */
+        setTimeout(() => {
+          checkPostsAndFeeds(state);
+        }, 5000);
       })
       .catch((error) => {
         console.log(error);
@@ -23,13 +34,13 @@ const checkPostsAndFeeds = (state) => {
   });
 };
 
-const startChecking = (state) => {
+/* const startChecking = (state) => {
   let timerChecker = setTimeout(() => {
     checkPostsAndFeeds(state);
     timerChecker = setTimeout(timerChecker, 5000);
   }, 5000);
 };
-
+ */
 const app = () => {
   /* ----------------------------SELECTORS--------------------------- */
   const elements = {
@@ -74,13 +85,13 @@ const app = () => {
         clearTimeout(timer);
         validate({ url: elements.input.value }, watchedState.urlsList)
           .then((result) => {
-            axios.get(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(`${result.url}`)}`)
+            axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${result.url}`)}`)
               .then((response) => {
-                watchedState.urlsList.push(result.url);
                 const resuletObj = parseRss(response);
+                watchedState.urlsList.push(result.url);
                 watchedState.feeds = [...watchedState.feeds, ...resuletObj.feeds];
-                watchedState.posts = [watchedState.posts, ...resuletObj.posts];
-                startChecking(watchedState);
+                watchedState.posts = [...watchedState.posts, ...resuletObj.posts];
+                checkPostsAndFeeds(watchedState);
                 watchedState.message = 'downloaded';
               })
               .catch((error) => {
