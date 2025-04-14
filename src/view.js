@@ -10,6 +10,7 @@ const createPostLi = (item, id) => {
     'align-items-start',
     'border-0',
     'border-end-0',
+    'post',
   );
 
   /* ------------------------------CREATE LINK----------------------------- */
@@ -18,6 +19,11 @@ const createPostLi = (item, id) => {
   a.setAttribute('data-id', id);
   a.setAttribute('target', '_blank');
   a.setAttribute('rel', 'nooperner noreferrer');
+  if (!item.reeded) {
+    a.classList.add('fw-bold');
+  } else {
+    a.classList.add('fw-normal', 'link-secondary');
+  }
   a.classList.add('fw-bold');
   a.textContent = item.title;
   newLi.append(a);
@@ -51,7 +57,7 @@ const createFeedLi = (item) => {
 
 const renderPosts = (value) => {
   const postsContainer = document.querySelector('.posts');
-  let id = 0;
+  let id = 1;
   /* -----------------------------------MAKE POSTS CARD CONTAINER------------------------------- */
   const mainCardPosts = document.createElement('div');
   mainCardPosts.classList.add('card', 'border-0');
@@ -129,11 +135,32 @@ const makeInputGreen = (elements) => {
   clearForm(elements);
 };
 
+const renderModal = (post) => {
+  const modalButton = document.querySelector('[rel="noopener noreferrer"]');
+  const modalTitle = document.querySelector('.modal-title');
+  const modalDescription = document.querySelector('.modal-body');
+  modalTitle.textContent = post.title;
+  modalDescription.textContent = post.description;
+  modalButton.removeAttribute('href');
+  modalButton.setAttribute('href', post.link);
+};
+
 /* eslint-disable */
 const watch = (elements, i18n, state) => {
   const watchedState = onChange(state, (path, value) => {
     switch (path) {
       case 'activeUrl':
+        break;
+      case 'activePost':
+        console.log(value);
+        renderModal(value);
+        break;
+      case 'reededPosts':
+        value.forEach((post) => {
+          const postLink = document.querySelector(`[data-id='${post}']`);
+          postLink.classList.remove('fw-bold');
+          postLink.classList.add('fw-normal', 'link-secondary');
+        })
         break;
       case 'feeds':
         elements.feedsContainer.innerHTML = '';

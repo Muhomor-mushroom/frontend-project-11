@@ -18,6 +18,7 @@ const parseRss = (rss) => {
     },
   ];
   const items = [...dom.querySelectorAll("item")];
+  let counter = 1;
   items.map((item) => {
     resultObj.posts = [
       ...resultObj.posts,
@@ -25,8 +26,11 @@ const parseRss = (rss) => {
         title: item.querySelector("title").textContent,
         description: item.querySelector("description").textContent,
         link: item.querySelector("link").textContent,
+        id: counter,
+        reeded: false,
       },
     ];
+    counter += 1;
   });
   return resultObj;
   /* eslint-enable */

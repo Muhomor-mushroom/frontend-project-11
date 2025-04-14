@@ -1,5 +1,6 @@
 import i18next from 'i18next';
 import axios from 'axios';
+/* import { remove } from 'lodash'; */
 import validate from './validate.js';
 import watch from './view.js';
 import ru from './resources/ru.js';
@@ -56,6 +57,8 @@ const app = () => {
     posts: [],
     feeds: [],
     urlsList: [],
+    reededPosts: [],
+    activePost: {},
     timerIsActive: false,
   };
   /* -------------------------------MAKE SET LOCALE---------------------------- */
@@ -91,6 +94,37 @@ const app = () => {
                 watchedState.posts = [...watchedState.posts, ...resuletObj.posts];
                 checkPostsAndFeeds(watchedState);
                 watchedState.message = 'downloaded';
+                const addedPosts = [...document.querySelectorAll('.post')];
+                const insidePosts = addedPosts.map((post) => {
+                  const aOfPost = post.querySelector('a');
+                  const postId = aOfPost.getAttribute('data-id');
+                  return {
+                    a: post.querySelector('a'),
+                    button: post.querySelector('button'),
+                    id: postId,
+                  };
+                });
+                insidePosts.forEach((post) => {
+                  post.a.addEventListener('click', () => {
+                    if (!watchedState.reededPosts.includes(post.id)) {
+                      watchedState.reededPosts.push(post.id);
+                    }
+                  });
+                  post.button.addEventListener('click', () => {
+                    if (!watchedState.reededPosts.includes(post.id)) {
+                      watchedState.reededPosts.push(post.id);
+                    }
+                    /* eslint-disable */
+                    const changedPost = watchedState.posts.find((element) => element.id == post.id);
+                    /* eslint-enable */
+                    changedPost.reeded = true;
+                    watchedState.activePost = {
+                      title: changedPost.title,
+                      description: changedPost.description,
+                      link: changedPost.link,
+                    };
+                  });
+                });
               })
               .catch((error) => {
                 console.error(error);
