@@ -16,7 +16,7 @@ const checkPostsAndFeeds = (state) => {
         const oldTitles = oldPosts.map((oldPost) => oldPost.title);
         newPosts.forEach((newPost) => {
           if (!oldTitles.includes(newPost.title)) {
-            console.log(`url: ${url}, tite: ${newPost.title}`);
+            console.log(`url: ${url}, title: ${newPost.title}`);
             state.posts.unshift({ ...newPost, id: state.posts.length + 1 });
           }
         });
@@ -94,37 +94,6 @@ const app = () => {
                 watchedState.posts = [...watchedState.posts, ...resuletObj.posts];
                 checkPostsAndFeeds(watchedState);
                 watchedState.message = 'downloaded';
-                const addedPosts = [...document.querySelectorAll('.post')];
-                const insidePosts = addedPosts.map((post) => {
-                  const aOfPost = post.querySelector('a');
-                  const postId = aOfPost.getAttribute('data-id');
-                  return {
-                    a: post.querySelector('a'),
-                    button: post.querySelector('button'),
-                    id: postId,
-                  };
-                });
-                insidePosts.forEach((post) => {
-                  post.a.addEventListener('click', () => {
-                    if (!watchedState.reededPosts.includes(post.id)) {
-                      watchedState.reededPosts.push(post.id);
-                    }
-                  });
-                  post.button.addEventListener('click', () => {
-                    if (!watchedState.reededPosts.includes(post.id)) {
-                      watchedState.reededPosts.push(post.id);
-                    }
-                    /* eslint-disable */
-                    const changedPost = watchedState.posts.find((element) => element.id == post.id);
-                    /* eslint-enable */
-                    changedPost.reeded = true;
-                    watchedState.activePost = {
-                      title: changedPost.title,
-                      description: changedPost.description,
-                      link: changedPost.link,
-                    };
-                  });
-                });
               })
               .catch((error) => {
                 console.error(error);

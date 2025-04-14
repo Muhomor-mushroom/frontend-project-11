@@ -1,6 +1,6 @@
 import onChange from 'on-change';
 
-const createPostLi = (item, id) => {
+const createPostLi = (item, id, watchedState) => {
   /* ----------------------------MAKING LI'S--------------------------- */
   const newLi = document.createElement('li');
   newLi.classList.add(
@@ -24,8 +24,18 @@ const createPostLi = (item, id) => {
   } else {
     a.classList.add('fw-normal', 'link-secondary');
   }
-  a.classList.add('fw-bold');
   a.textContent = item.title;
+  a.addEventListener('click', () => {
+    const post = watchedState.posts.find((element) => element.id === id);
+    if (!watchedState.reededPosts.includes(post)) {
+      /* eslint-disable */
+      watchedState.reededPosts.push(post);
+      post.reeded = true;
+      watchedState.activePost = post;
+      /* eslint-enable*/
+    }
+    watchedState.activePost = post;
+  });
   newLi.append(a);
   /* --------------------------------CREATE BUTTON----------------------------- */
   const newButton = document.createElement('button');
@@ -35,6 +45,16 @@ const createPostLi = (item, id) => {
   newButton.setAttribute('data-bs-target', '#modal');
   newButton.classList.add('btn', 'btn-outline-primary', 'btn-sm');
   newButton.textContent = 'Просмотр';
+  newButton.addEventListener('click', () => {
+    const post = watchedState.posts.find((element) => element.id === id);
+    if (!watchedState.reededPosts.includes(post)) {
+      /* eslint-disable */
+      watchedState.reededPosts.push(post);
+      post.reeded = true;
+      /* eslint-enable*/
+    }
+    watchedState.activePost = post;
+  });
   /* ---------------------------------FINISH MAKING BUTTON----------------------- */
   newLi.append(newButton);
   return newLi;
@@ -55,9 +75,8 @@ const createFeedLi = (item) => {
   return feedsUlLi;
 };
 
-const renderPosts = (value) => {
+const renderPosts = (value, watchedState) => {
   const postsContainer = document.querySelector('.posts');
-  let id = 1;
   /* -----------------------------------MAKE POSTS CARD CONTAINER------------------------------- */
   const mainCardPosts = document.createElement('div');
   mainCardPosts.classList.add('card', 'border-0');
@@ -75,9 +94,8 @@ const renderPosts = (value) => {
   const postsUl = document.createElement('ul');
   postsUl.classList.add('list-group', 'border-0', 'rounded-0');
   value.forEach((item) => {
-    const newLi = createPostLi(item, id);
+    const newLi = createPostLi(item, item.id, watchedState);
     postsUl.append(newLi);
-    id += 1;
   });
   mainCardPosts.append(postsUl);
   postsContainer.append(mainCardPosts);
@@ -152,12 +170,11 @@ const watch = (elements, i18n, state) => {
       case 'activeUrl':
         break;
       case 'activePost':
-        console.log(value);
         renderModal(value);
         break;
       case 'reededPosts':
         value.forEach((post) => {
-          const postLink = document.querySelector(`[data-id='${post}']`);
+          const postLink = document.querySelector(`[data-id='${post.id}']`);
           postLink.classList.remove('fw-bold');
           postLink.classList.add('fw-normal', 'link-secondary');
         })
@@ -168,7 +185,7 @@ const watch = (elements, i18n, state) => {
         break;
       case 'posts':
         elements.postsContainer.innerHTML = '';
-        renderPosts(value);
+        renderPosts(value, watchedState);
         break;
       case 'timerIsActive':
         console.log('timer');
