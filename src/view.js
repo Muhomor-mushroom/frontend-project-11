@@ -32,9 +32,9 @@ const createPostLi = (item, id, watchedState) => {
       watchedState.reededPosts.push(post);
       post.reeded = true;
       watchedState.activePost = post;
-      /* eslint-enable*/
     }
     watchedState.activePost = post;
+    /* eslint-enable */
   });
   newLi.append(a);
   /* --------------------------------CREATE BUTTON----------------------------- */
@@ -51,9 +51,9 @@ const createPostLi = (item, id, watchedState) => {
       /* eslint-disable */
       watchedState.reededPosts.push(post);
       post.reeded = true;
-      /* eslint-enable*/
     }
     watchedState.activePost = post;
+    /* eslint-enable */
   });
   /* ---------------------------------FINISH MAKING BUTTON----------------------- */
   newLi.append(newButton);
