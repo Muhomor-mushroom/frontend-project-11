@@ -7,7 +7,7 @@ export default {
       axiosError: 'Ошибка сети',
       alreadySuccess: 'RSS уже существует',
       downloaded: 'RSS успешно загружен',
-      notRss: 'Ресурс содержит не валидный RSS',
+      notRss: 'Ресурс не содержит валидный RSS',
     },
   },
 };
