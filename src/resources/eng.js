@@ -6,7 +6,7 @@ export default {
       URLerror: 'Network error',
       alreadySuccess: 'RSS is already success',
       downloaded: 'RSS successfully loaded',
-      notRss: 'The link is not rss'
+      notRss: 'The link is not rss',
     },
   },
 };

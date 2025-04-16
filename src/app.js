@@ -111,6 +111,7 @@ const app = () => {
                 break;
               case 'url is a required field':
                 watchedState.message = 'requiredField';
+                break;
               default:
                 break;
             }
