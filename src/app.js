@@ -97,7 +97,7 @@ const app = () => {
               })
               .catch((error) => {
                 console.error(error);
-                watchedState.message = error.message;
+                watchedState.message = 'axiosError';
               });
           })
           .catch((error) => {
