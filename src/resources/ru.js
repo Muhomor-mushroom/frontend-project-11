@@ -1,11 +1,13 @@
 export default {
   ru: {
     translation: {
+      button: 'просмотр',
+      requiredField: 'Не должно быть пустым',
       URLerror: 'Ссылка должна быть валидным URL',
-      axiosError: 'Запрос не выполнился',
+      axiosError: 'Ошибка сети',
       alreadySuccess: 'RSS уже существует',
       downloaded: 'RSS успешно загружен',
-      notRss: 'Ссылка не является RSS',
+      notRss: 'Ресурс содержит не валидный RSS',
     },
   },
 };

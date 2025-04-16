@@ -101,10 +101,18 @@ const app = () => {
               });
           })
           .catch((error) => {
-            if (error.errors[0].includes('url must not be one')) {
+            console.log(error.errors[0]);
+            if (error.errors[0].includes('url must not be')) {
               watchedState.message = 'alreadySuccess';
-            } else {
-              watchedState.message = 'URLerror';
+            }
+            switch (error.errors[0]) {
+              case 'url must be a valid URL':
+                watchedState.message = 'URLerror';
+                break;
+              case 'url is a required field':
+                watchedState.message = 'requiredField';
+              default:
+                break;
             }
           });
       });

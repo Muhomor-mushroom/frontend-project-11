@@ -137,6 +137,7 @@ const editContent = (element, text) => {
 };
 
 const clearForm = (elements) => {
+  console.log(elements);
   elements.input.classList.remove('is-invalid');
   elements.p.classList.remove('text-danger');
   editContent(elements.p, '');
@@ -197,6 +198,7 @@ const watch = (elements, i18n, state) => {
           case 'axiosError':
           case 'alreadySuccess':
           case 'URLerror':
+          case 'requiredField':
             makeInputRed(elements);
             editContent(elements.p, i18n.t(value));
             break;
