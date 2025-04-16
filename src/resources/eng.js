@@ -1,6 +1,7 @@
 export default {
   eng: {
     translation: {
+      button: 'watch',
       requiredField: 'Url is a required field',
       axiosError: 'The request failed',
       URLerror: 'Network error',
