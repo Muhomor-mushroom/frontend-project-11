@@ -99,7 +99,7 @@ const app = () => {
                 console.error(error);
                 console.log(error.message);
                 /* eslint-disable */
-                error.message === 'notRss' ? watchedState.message = error.message : watchedState.message = 'AxiosError';
+                error.message === 'notRss' ? watchedState.message = error.message : watchedState.message = 'axiosError';
                 /* eslint-enable */
               });
           })
