@@ -97,7 +97,10 @@ const app = () => {
               })
               .catch((error) => {
                 console.error(error);
-                watchedState.message = 'axiosError';
+                console.log(error.message);
+                /* eslint-disable */
+                error.message === 'notRss' ? watchedState.message = error.message : watchedState.message = 'AxiosError';
+                /* eslint-enable */
               });
           })
           .catch((error) => {
