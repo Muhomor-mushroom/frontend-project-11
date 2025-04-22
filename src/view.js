@@ -137,7 +137,6 @@ const editContent = (element, text) => {
 };
 
 const clearForm = (elements) => {
-  console.log(elements);
   elements.input.classList.remove('is-invalid');
   elements.p.classList.remove('text-danger');
   editContent(elements.p, '');
@@ -191,6 +190,24 @@ const watch = (elements, i18n, state) => {
       case 'timerIsActive':
         console.log('timer');
         break;
+      case 'requestStatus':
+        switch (value) {
+          case 'pending':
+            elements.input.setAttribute('disabled', 'true');
+            elements.confirmButton.setAttribute('disabled', 'true');
+            break;
+          case 'success':
+            elements.input.removeAttribute('disabled');
+            elements.confirmButton.removeAttribute('disabled');
+            makeInputGreen(elements);
+            editContent(elements.p, i18n.t('downloaded'));
+            break;
+          case 'failed':
+            elements.input.removeAttribute('disabled');
+            elements.confirmButton.removeAttribute('disabled');
+            break;
+        }
+        break;
       case 'message':
         clearForm(elements);
         switch (value) {
@@ -203,8 +220,6 @@ const watch = (elements, i18n, state) => {
             editContent(elements.p, i18n.t(value));
             break;
           case 'downloaded':
-            makeInputGreen(elements);
-            editContent(elements.p, i18n.t('downloaded'));
             break;
           default:
             break;

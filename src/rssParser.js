@@ -2,7 +2,6 @@ const parseRss = (rss) => {
   const content = rss.data.contents;
   const parsedRss = new DOMParser(content);
   const dom = parsedRss.parseFromString(content, 'text/xml');
-  console.log(dom);
   /* eslint-disable */
   if (dom.querySelector("parsererror") || !dom.querySelector('rss')) {
     throw new Error("notRss");

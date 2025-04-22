@@ -16,30 +16,18 @@ const checkPostsAndFeeds = (state) => {
         const oldTitles = oldPosts.map((oldPost) => oldPost.title);
         newPosts.forEach((newPost) => {
           if (!oldTitles.includes(newPost.title)) {
-            console.log(`url: ${url}, title: ${newPost.title}`);
             state.posts.unshift({ ...newPost, id: state.posts.length + 1 });
           }
         });
-        /* const finalCheck = newPosts.filter((newPost) => {
-          return oldPosts.some((oldPost) => !oldPost.title === newPost.title);
-        }) */
-        setTimeout(() => {
-          checkPostsAndFeeds(state);
-        }, 5000);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   });
-};
-
-/* const startChecking = (state) => {
-  let timerChecker = setTimeout(() => {
+  setTimeout(() => {
     checkPostsAndFeeds(state);
-    timerChecker = setTimeout(timerChecker, 5000);
   }, 5000);
 };
- */
 const app = () => {
   /* ----------------------------SELECTORS--------------------------- */
   const elements = {
@@ -58,6 +46,7 @@ const app = () => {
     feeds: [],
     urlsList: [],
     reededPosts: [],
+    requestStatus: '',
     activePost: {},
     timerIsActive: false,
   };
@@ -77,13 +66,12 @@ const app = () => {
       resources: ru,
     })
     .then(() => {
-      let timer;
       /* ------------------------------MAKE WATCHED STATE------------------------- */
       const watchedState = watch(elements, i18n, initialState);
       /* ----------------------------EVENT LISTENERS------------------------- */
       elements.form.addEventListener('submit', (e) => {
         e.preventDefault();
-        clearTimeout(timer);
+        watchedState.requestStatus = 'pending';
         validate({ url: elements.input.value }, watchedState.urlsList)
           .then((result) => {
             axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${result.url}`)}`)
@@ -92,14 +80,15 @@ const app = () => {
                 watchedState.urlsList.push(result.url);
                 watchedState.feeds = [...watchedState.feeds, ...resuletObj.feeds];
                 watchedState.posts = [...watchedState.posts, ...resuletObj.posts];
-                checkPostsAndFeeds(watchedState);
                 watchedState.message = 'downloaded';
+                watchedState.requestStatus = 'success';
               })
               .catch((error) => {
                 console.error(error);
                 console.log(error.message);
                 /* eslint-disable */
                 error.message === 'notRss' ? watchedState.message = error.message : watchedState.message = 'axiosError';
+                watchedState.requestStatus = 'failed'
                 /* eslint-enable */
               });
           })
@@ -120,6 +109,7 @@ const app = () => {
             }
           });
       });
+      checkPostsAndFeeds(watchedState);
     });
 };
 
