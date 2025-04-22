@@ -1,7 +1,8 @@
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-
+/* eslint-disable */
 const isProduction = process.env.NODE_ENV === 'production';
+/* eslint-enable */
 
 const config = {
   entry: './src/index.js',
