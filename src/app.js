@@ -104,8 +104,6 @@ const app = () => {
                   ...watchedState.posts,
                   ...resuletObj.posts,
                 ];
-                /*                 const makedLinks = [...document.querySelectorAll('a.fw-bold')];
-                const makedButtons = [...document.querySelectorAll('button.btn-sm')]; */
                 watchedState.message = messages.downloaded;
                 watchedState.requestStatus = requestStatuses.success;
               })
