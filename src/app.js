@@ -1,16 +1,16 @@
-import i18next from "i18next";
-import axios from "axios";
+import i18next from 'i18next';
+import axios from 'axios';
 /* import { remove } from 'lodash'; */
-import validate from "./validate.js";
-import watch from "./view.js";
-import ru from "./resources/ru.js";
-import parseRss from "./rssParser.js";
+import validate from './validate.js';
+import watch from './view.js';
+import ru from './resources/ru.js';
+import parseRss from './rssParser.js';
 
 const checkPostsAndFeeds = (state) => {
   state.urlsList.forEach((url) => {
     axios
       .get(
-        `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${url}`)}`
+        `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${url}`)}`,
       )
       .then((response) => {
         const parsedUrl = parseRss(response);
@@ -23,49 +23,47 @@ const checkPostsAndFeeds = (state) => {
           }
         });
       })
-      .catch((error) => {});
+      .catch(() => {});
   });
   setTimeout(() => {
     checkPostsAndFeeds(state);
   }, 5000);
 };
 
-const urlConvert = (obj) => {
-  return `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${obj.url}`)}`;
-};
+const urlConvert = (obj) => `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${obj.url}`)}`;
 
 const app = () => {
   /* ----------------------------SELECTORS AND STATUSES--------------------------- */
   const elements = {
-    form: document.querySelector(".rss-form"),
-    input: document.querySelector("#url-input"),
+    form: document.querySelector('.rss-form'),
+    input: document.querySelector('#url-input'),
     confirmButton: document.querySelector('button[type="submit"]'),
-    p: document.querySelector("p.feedback"),
-    postsContainer: document.querySelector(".posts"),
-    feedsContainer: document.querySelector(".feeds"),
+    p: document.querySelector('p.feedback'),
+    postsContainer: document.querySelector('.posts'),
+    feedsContainer: document.querySelector('.feeds'),
   };
   const requestStatuses = {
-    pending: "pending",
-    success: "success",
-    failed: "failed",
+    pending: 'pending',
+    success: 'success',
+    failed: 'failed',
   };
 
   const messages = {
-    downloaded: "downloaded",
-    notRss: "notRss",
-    alreadySuccess: "alreadySuccess",
-    URLerror: "URLerror",
-    requiredField: "requiredField",
+    downloaded: 'downloaded',
+    notRss: 'notRss',
+    alreadySuccess: 'alreadySuccess',
+    URLerror: 'URLerror',
+    requiredField: 'requiredField',
   };
   /* ----------------------------INITIAL STATE-------------------------- */
   const initialState = {
     validationComplete: false,
-    message: "",
+    message: '',
     posts: [],
     feeds: [],
     urlsList: [],
     reededPosts: [],
-    requestStatus: "",
+    requestStatus: '',
     activePost: {},
     timerIsActive: false,
   };
@@ -80,7 +78,7 @@ const app = () => {
   const i18n = i18next.createInstance();
   i18n
     .init({
-      lng: "ru",
+      lng: 'ru',
       debug: true,
       resources: ru,
     })
@@ -88,7 +86,7 @@ const app = () => {
       /* ------------------------------MAKE WATCHED STATE------------------------- */
       const watchedState = watch(elements, i18n, initialState);
       /* ----------------------------EVENT LISTENERS------------------------- */
-      elements.form.addEventListener("submit", (e) => {
+      elements.form.addEventListener('submit', (e) => {
         e.preventDefault();
         watchedState.requestStatus = requestStatuses.pending;
         validate({ url: elements.input.value }, watchedState.urlsList)
@@ -106,8 +104,8 @@ const app = () => {
                   ...watchedState.posts,
                   ...resuletObj.posts,
                 ];
-                const makedLinks = [...document.querySelectorAll('a.fw-bold')];
-                const makedButtons = [...document.querySelectorAll('button.btn-sm')];
+                /*                 const makedLinks = [...document.querySelectorAll('a.fw-bold')];
+                const makedButtons = [...document.querySelectorAll('button.btn-sm')]; */
                 watchedState.message = messages.downloaded;
                 watchedState.requestStatus = requestStatuses.success;
               })
@@ -122,14 +120,14 @@ const app = () => {
           })
           .catch((error) => {
             watchedState.requestStatus = requestStatuses.failed;
-            if (error.errors[0].includes("url must not be")) {
+            if (error.errors[0].includes('url must not be')) {
               watchedState.message = messages.alreadySuccess;
             }
             switch (error.errors[0]) {
-              case "url must be a valid URL":
+              case 'url must be a valid URL':
                 watchedState.message = messages.URLerror;
                 break;
-              case "url is a required field":
+              case 'url is a required field':
                 watchedState.message = messages.requiredField;
                 break;
               default:
