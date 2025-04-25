@@ -1,14 +1,17 @@
-import i18next from 'i18next';
-import axios from 'axios';
+import i18next from "i18next";
+import axios from "axios";
 /* import { remove } from 'lodash'; */
-import validate from './validate.js';
-import watch from './view.js';
-import ru from './resources/ru.js';
-import parseRss from './rssParser.js';
+import validate from "./validate.js";
+import watch from "./view.js";
+import ru from "./resources/ru.js";
+import parseRss from "./rssParser.js";
 
 const checkPostsAndFeeds = (state) => {
   state.urlsList.forEach((url) => {
-    axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${url}`)}`)
+    axios
+      .get(
+        `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${url}`)}`
+      )
       .then((response) => {
         const parsedUrl = parseRss(response);
         const oldPosts = state.posts;
@@ -20,33 +23,49 @@ const checkPostsAndFeeds = (state) => {
           }
         });
       })
-      .catch((error) => {
-        console.error(error);
-      });
+      .catch((error) => {});
   });
   setTimeout(() => {
     checkPostsAndFeeds(state);
   }, 5000);
 };
+
+const urlConvert = (obj) => {
+  return `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${obj.url}`)}`;
+};
+
 const app = () => {
-  /* ----------------------------SELECTORS--------------------------- */
+  /* ----------------------------SELECTORS AND STATUSES--------------------------- */
   const elements = {
-    form: document.querySelector('.rss-form'),
-    input: document.querySelector('#url-input'),
+    form: document.querySelector(".rss-form"),
+    input: document.querySelector("#url-input"),
     confirmButton: document.querySelector('button[type="submit"]'),
-    p: document.querySelector('p.feedback'),
-    postsContainer: document.querySelector('.posts'),
-    feedsContainer: document.querySelector('.feeds'),
+    p: document.querySelector("p.feedback"),
+    postsContainer: document.querySelector(".posts"),
+    feedsContainer: document.querySelector(".feeds"),
+  };
+  const requestStatuses = {
+    pending: "pending",
+    success: "success",
+    failed: "failed",
+  };
+
+  const messages = {
+    downloaded: "downloaded",
+    notRss: "notRss",
+    alreadySuccess: "alreadySuccess",
+    URLerror: "URLerror",
+    requiredField: "requiredField",
   };
   /* ----------------------------INITIAL STATE-------------------------- */
   const initialState = {
     validationComplete: false,
-    message: '',
+    message: "",
     posts: [],
     feeds: [],
     urlsList: [],
     reededPosts: [],
-    requestStatus: '',
+    requestStatus: "",
     activePost: {},
     timerIsActive: false,
   };
@@ -61,7 +80,7 @@ const app = () => {
   const i18n = i18next.createInstance();
   i18n
     .init({
-      lng: 'ru',
+      lng: "ru",
       debug: true,
       resources: ru,
     })
@@ -69,40 +88,49 @@ const app = () => {
       /* ------------------------------MAKE WATCHED STATE------------------------- */
       const watchedState = watch(elements, i18n, initialState);
       /* ----------------------------EVENT LISTENERS------------------------- */
-      elements.form.addEventListener('submit', (e) => {
+      elements.form.addEventListener("submit", (e) => {
         e.preventDefault();
-        watchedState.requestStatus = 'pending';
+        watchedState.requestStatus = requestStatuses.pending;
         validate({ url: elements.input.value }, watchedState.urlsList)
           .then((result) => {
-            axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${result.url}`)}`)
+            axios
+              .get(urlConvert(result))
               .then((response) => {
                 const resuletObj = parseRss(response);
                 watchedState.urlsList.push(result.url);
-                watchedState.feeds = [...watchedState.feeds, ...resuletObj.feeds];
-                watchedState.posts = [...watchedState.posts, ...resuletObj.posts];
-                watchedState.message = 'downloaded';
-                watchedState.requestStatus = 'success';
+                watchedState.feeds = [
+                  ...watchedState.feeds,
+                  ...resuletObj.feeds,
+                ];
+                watchedState.posts = [
+                  ...watchedState.posts,
+                  ...resuletObj.posts,
+                ];
+                const makedLinks = [...document.querySelectorAll('a.fw-bold')];
+                const makedButtons = [...document.querySelectorAll('button.btn-sm')];
+                watchedState.message = messages.downloaded;
+                watchedState.requestStatus = requestStatuses.success;
               })
               .catch((error) => {
-                console.error(error);
-                console.log(error.message);
                 /* eslint-disable */
-                error.message === 'notRss' ? watchedState.message = error.message : watchedState.message = 'axiosError';
-                watchedState.requestStatus = 'failed'
+                error.message === messages.notRss
+                  ? (watchedState.message = error.message)
+                  : (watchedState.message = "axiosError");
+                watchedState.requestStatus = requestStatuses.failed;
                 /* eslint-enable */
               });
           })
           .catch((error) => {
-            console.log(error.errors[0]);
-            if (error.errors[0].includes('url must not be')) {
-              watchedState.message = 'alreadySuccess';
+            watchedState.requestStatus = requestStatuses.failed;
+            if (error.errors[0].includes("url must not be")) {
+              watchedState.message = messages.alreadySuccess;
             }
             switch (error.errors[0]) {
-              case 'url must be a valid URL':
-                watchedState.message = 'URLerror';
+              case "url must be a valid URL":
+                watchedState.message = messages.URLerror;
                 break;
-              case 'url is a required field':
-                watchedState.message = 'requiredField';
+              case "url is a required field":
+                watchedState.message = messages.requiredField;
                 break;
               default:
                 break;

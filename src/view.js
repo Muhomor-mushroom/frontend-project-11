@@ -187,9 +187,6 @@ const watch = (elements, i18n, state) => {
         elements.postsContainer.innerHTML = '';
         renderPosts(value, watchedState);
         break;
-      case 'timerIsActive':
-        console.log('timer');
-        break;
       case 'requestStatus':
         switch (value) {
           case 'pending':
