@@ -170,6 +170,35 @@ const renderModal = (post) => {
   modalButton.setAttribute('href', post.link);
 };
 
+const requestViewer = (status, elements, i18n) => {
+  switch (status) {
+    case 'pending':
+      elements.input.setAttribute('disabled', 'true');
+      elements.confirmButton.setAttribute('disabled', 'true');
+      break;
+    case 'success':
+      elements.input.removeAttribute('disabled');
+      elements.confirmButton.removeAttribute('disabled');
+      makeInputGreen(elements);
+      editContent(elements.p, i18n.t('downloaded'));
+      break;
+    case 'failed':
+      elements.input.removeAttribute('disabled');
+      elements.confirmButton.removeAttribute('disabled');
+      break;
+    default:
+      break;
+  }
+};
+
+const makeReaded = (allPosts) => {
+  allPosts.forEach((unreadedPost) => {
+    const postLink = document.querySelector(`[data-id='${unreadedPost.id}']`);
+    postLink.classList.remove('fw-bold');
+    postLink.classList.add('fw-normal', 'link-secondary');
+  });
+};
+
 /* eslint-disable */
 const watch = (elements, i18n, state) => {
   const watchedState = onChange(state, (path, value) => {
@@ -180,11 +209,7 @@ const watch = (elements, i18n, state) => {
         renderModal(value);
         break;
       case "reededPosts":
-        value.forEach((post) => {
-          const postLink = document.querySelector(`[data-id='${post.id}']`);
-          postLink.classList.remove("fw-bold");
-          postLink.classList.add("fw-normal", "link-secondary");
-        });
+        makeReaded(value);
         break;
       case "feeds":
         elements.feedsContainer.innerHTML = "";
@@ -195,38 +220,14 @@ const watch = (elements, i18n, state) => {
         renderPosts(value, watchedState);
         break;
       case "requestStatus":
-        switch (value) {
-          case "pending":
-            elements.input.setAttribute("disabled", "true");
-            elements.confirmButton.setAttribute("disabled", "true");
-            break;
-          case "success":
-            elements.input.removeAttribute("disabled");
-            elements.confirmButton.removeAttribute("disabled");
-            makeInputGreen(elements);
-            editContent(elements.p, i18n.t("downloaded"));
-            break;
-          case "failed":
-            elements.input.removeAttribute("disabled");
-            elements.confirmButton.removeAttribute("disabled");
-            break;
-        }
+        console.log(value);
+        requestViewer(value, elements, i18n);
         break;
       case "message":
         clearForm(elements);
-        switch (value) {
-          case "notRss":
-          case "axiosError":
-          case "alreadySuccess":
-          case "URLerror":
-          case "requiredField":
-            makeInputRed(elements);
-            editContent(elements.p, i18n.t(value));
-            break;
-          case "downloaded":
-            break;
-          default:
-            break;
+        if (value !== "downloaded") {
+          makeInputRed(elements);
+          editContent(elements.p, i18n.t(value));
         }
         break;
       case "previousUrl":
