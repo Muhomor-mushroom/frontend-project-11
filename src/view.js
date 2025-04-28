@@ -34,7 +34,6 @@ const createPostLi = (item, id, watchedState) => {
   }
   a.textContent = item.title;
   a.addEventListener('click', () => {
-    console.log(isReededPost(id, watchedState));
     const post = watchedState.posts.find((element) => element.id === id);
     if (!watchedState.reededPosts.includes(post)) {
       /* eslint-disable */
@@ -220,7 +219,6 @@ const watch = (elements, i18n, state) => {
         renderPosts(value, watchedState);
         break;
       case "requestStatus":
-        console.log(value);
         requestViewer(value, elements, i18n);
         break;
       case "message":

@@ -85,6 +85,10 @@ const app = () => {
     .then(() => {
       /* ------------------------------MAKE WATCHED STATE------------------------- */
       const watchedState = watch(elements, i18n, initialState);
+      /* ------------------------------MAKE COUNTER FOR PARSER-------------------- */
+      /* eslint-disable */
+      let parseCounter = 1;
+      /* eslint-enable */
       /* ----------------------------EVENT LISTENERS------------------------- */
       elements.form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -94,7 +98,7 @@ const app = () => {
             axios
               .get(urlConvert(result))
               .then((response) => {
-                const resuletObj = parseRss(response);
+                const resuletObj = parseRss(response, parseCounter);
                 watchedState.urlsList.push(result.url);
                 watchedState.feeds = [
                   ...watchedState.feeds,
@@ -106,6 +110,9 @@ const app = () => {
                 ];
                 watchedState.message = messages.downloaded;
                 watchedState.requestStatus = requestStatuses.success;
+                /* eslint-disable */
+                parseCounter = parseCounter += watchedState.posts.length;
+                /* eslint-enable */
               })
               .catch((error) => {
                 /* eslint-disable */

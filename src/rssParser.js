@@ -1,4 +1,4 @@
-const parseRss = (rss) => {
+const parseRss = (rss, firstCounter) => {
   const content = rss.data.contents;
   const parsedRss = new DOMParser(content);
   const dom = parsedRss.parseFromString(content, 'text/xml');
@@ -18,7 +18,7 @@ const parseRss = (rss) => {
     },
   ];
   const items = [...dom.querySelectorAll("item")];
-  let counter = 1;
+  let counter = firstCounter;
   items.map((item) => {
     resultObj.posts = [
       ...resultObj.posts,
