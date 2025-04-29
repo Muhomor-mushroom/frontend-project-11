@@ -1,5 +1,5 @@
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
-import HtmlWebpackPlugin from 'html-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin'
 /* eslint-disable */
 const isProduction = process.env.NODE_ENV === 'production';
 /* eslint-enable */
@@ -44,13 +44,14 @@ const config = {
     /warning from compiler/,
     () => true,
   ],
-};
+}
 
 export default () => {
   if (isProduction) {
-    config.mode = 'production';
-  } else {
-    config.mode = 'development';
+    config.mode = 'production'
   }
-  return config;
-};
+  else {
+    config.mode = 'development'
+  }
+  return config
+}

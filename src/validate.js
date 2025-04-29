@@ -1,11 +1,11 @@
-import * as yup from 'yup';
+import * as yup from 'yup'
 
 const validate = (url, urlsList) => {
   /* --------------------------------- */
   const schema = yup.object().shape({
     url: yup.string().required().url().nullable()
       .notOneOf(urlsList),
-  });
-  return schema.validate(url);
-};
-export default validate;
+  })
+  return schema.validate(url)
+}
+export default validate

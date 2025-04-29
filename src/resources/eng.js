@@ -10,4 +10,4 @@ export default {
       notRss: 'The link is not rss',
     },
   },
-};
+}

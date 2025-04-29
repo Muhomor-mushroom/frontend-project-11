@@ -1,7 +1,7 @@
 const parseRss = (rss, firstCounter) => {
-  const content = rss.data.contents;
-  const parsedRss = new DOMParser(content);
-  const dom = parsedRss.parseFromString(content, 'text/xml');
+  const content = rss.data.contents
+  const parsedRss = new DOMParser(content)
+  const dom = parsedRss.parseFromString(content, 'text/xml')
   /* eslint-disable */
   if (dom.querySelector("parsererror") || !dom.querySelector('rss')) {
     throw new Error("notRss");
@@ -34,5 +34,5 @@ const parseRss = (rss, firstCounter) => {
   });
   return resultObj;
   /* eslint-enable */
-};
-export default parseRss;
+}
+export default parseRss
